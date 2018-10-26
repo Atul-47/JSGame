@@ -1,2 +1,2 @@
 # JSGame
-Simple JS Game
+Simple JS Game - Arcade Tennis
