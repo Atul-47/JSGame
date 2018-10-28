@@ -1,4 +1,4 @@
 # JSGame
 Simple JS Game
-[*] Arcade_Brick_Breaker
-[*] Arcade_Tennis
+- Arcade_Brick_Breaker
+- Arcade_Tennis
