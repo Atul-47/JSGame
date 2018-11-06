@@ -52,11 +52,26 @@
 		}
 	}
 
-	function isBrickAtTileCoord(brickTileCol, brickTileRow)
-{//returns 1 if brick is present else 0
-var brickIndex = brickTileCol +BRICK_COLS*brickTileRow;
-return (brickGrid[brickIndex]==1);
+	function isBrickAtTileCoord(brickTileCol, brickTileRow) {//returns 1 if brick is present else 0
+		var brickIndex = brickTileCol + BRICK_COLS * brickTileRow;
+		return (brickGrid[brickIndex] == 1);
+	}
+
+	function brickTileToIndex(tileCol, tileRow) {
+return (tileCol + BRICK_COLS*tileRow);
 }
+
+	function removeBrickAtPixelCoord(pixelX, pixelY) {
+		var tileCol = pixelX / BRICK_W;
+		var tileRow = pixelY / BRICK_H;
+		tileCol = Math.floor(tileCol);
+		tileRow = Math.floor(tileRow);
+		//first check whether the ball is within any part of the brick wall
+		if (tileCol < 0 || tileCol >= BRICK_COLS || tileRow < 0 || tileRow >= BRICK_ROWS) {
+			return;//bail out of function to avoid illegal array position usage
+		}
+		var brickIndex = brickTileToIndex(tileCol, tileRow); brickGrid[brickIndex] = 0;
+	}
 
 	function calculateMousePos(evt) {
 		var rect = canvas.getBoundingClientRect();
@@ -81,6 +96,7 @@ return (brickGrid[brickIndex]==1);
 
 		//draw bricks
 		drawBricks();
+		removeBrickAtPixelCoord(ballX,ballY);
 	}
 
 	function colorCircle(centerX, centerY, radius, drawColor) {
