@@ -6,8 +6,8 @@
 	var canvas;
 	var canvasContext;
 	//ball variables
-	var ballX = 50;
-	var ballY = 50;
+	var ballX = 350;
+	var ballY = 350;
 	var ballSpeedX = 10;
 	var ballSpeedY = 4;
 	//paddle variables
@@ -58,10 +58,10 @@
 	}
 
 	function brickTileToIndex(tileCol, tileRow) {
-return (tileCol + BRICK_COLS*tileRow);
-}
+		return (tileCol + BRICK_COLS*tileRow);
+	}
 
-	function removeBrickAtPixelCoord(pixelX, pixelY) {
+	function checkForAndremoveBrickAtPixelCoord(pixelX, pixelY) {
 		var tileCol = pixelX / BRICK_W;
 		var tileRow = pixelY / BRICK_H;
 		tileCol = Math.floor(tileCol);
@@ -70,7 +70,11 @@ return (tileCol + BRICK_COLS*tileRow);
 		if (tileCol < 0 || tileCol >= BRICK_COLS || tileRow < 0 || tileRow >= BRICK_ROWS) {
 			return;//bail out of function to avoid illegal array position usage
 		}
-		var brickIndex = brickTileToIndex(tileCol, tileRow); brickGrid[brickIndex] = 0;
+		var brickIndex = brickTileToIndex(tileCol, tileRow); 
+		if(isBrickAtTileCoord(tileCol, tileRow)){
+			ballSpeedY = -ballSpeedY;
+		}
+		brickGrid[brickIndex] = 0;
 	}
 
 	function calculateMousePos(evt) {
@@ -96,7 +100,7 @@ return (tileCol + BRICK_COLS*tileRow);
 
 		//draw bricks
 		drawBricks();
-		removeBrickAtPixelCoord(ballX,ballY);
+		checkForAndremoveBrickAtPixelCoord(ballX,ballY);
 	}
 
 	function colorCircle(centerX, centerY, radius, drawColor) {
@@ -143,15 +147,15 @@ return (tileCol + BRICK_COLS*tileRow);
 		if (ballY < 0) {
 			ballSpeedY = -ballSpeedY;
 		}
-		if (ballY > PADDLE_Y) {
+		if (ballY > PADDLE_Y && ballY < (PADDLE_Y+PADDLE_THICKNESS)) {
 			if (ballX > paddleX && ballX < paddleX + PADDLE_HEIGHT) {
 				ballSpeedY = -ballSpeedY;
 				var deltaX = ballX - (paddleX + PADDLE_HEIGHT / 2);
 				ballSpeedX = deltaX * 0.35;
-			}
-			else if (ballY > canvas.height) {
-				ballReset();
-			}
+			}			
+		}
+		if (ballY > canvas.height) {
+			ballReset();
 		}
 	}
 
